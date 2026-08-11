@@ -1,26 +1,68 @@
-# index-1
+# Field Visit Intelligence
 
-Static HTML application packaged for GitHub Pages.
+**Version:** 0.2.0  
+**Deployment:** GitHub Pages  
+**Primary URL:** `https://hafzbp.github.io/FieldVisitIntelligence/`
 
-## Contents
+Mobile-first field application for EC/SC 90% field validation, focused on:
 
-- `index.html` — main HTML application
-- `DEPLOY_GITHUB.md` — GitHub upload and Pages deployment guide
-- `SECURITY_CHECKLIST.md` — checklist before making the repo public
-- `SCAN_SUMMARY.json` — automatic converter scan results
-- `.gitignore` — prevents accidental upload of data/output files
-- `.nojekyll` — disables Jekyll processing on GitHub Pages
+- capturing actual Non-EC reason vs SFA reason;
+- validating reason accuracy / miscoding;
+- recording follow-up intention and timing;
+- capturing visit and call timestamps;
+- recording EC omzet;
+- allowing call corrections/editing;
+- supporting local-first parallel field work across multiple observers;
+- exporting/importing Visit JSON for merge and combined analysis;
+- exporting business analysis outputs.
 
-## Operating model
+## Run
 
-This package is intended as a static browser app. HTML, CSS, and JavaScript are served by GitHub Pages, while the processing still runs in the user's browser unless the HTML itself calls an external API.
+### GitHub Pages
+The production application is the root-level `index.html`.
 
-## Privacy / security note
+Repository structure:
 
-Target visibility selected during conversion: **private**.
+```text
+FieldVisitIntelligence/
+├── index.html
+├── version.json
+├── .nojekyll
+├── README.md
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── BUSINESS_LOGIC.md
+│   ├── CHANGELOG.md
+│   ├── DATA_DICTIONARY.md
+│   ├── DEPLOYMENT.md
+│   ├── PATCH_NOTES.md
+│   ├── QA_REPORT.md
+│   └── ROLLBACK.md
+└── rollback/
+    └── v0.1.0/
+        ├── index.html
+        └── version.json
+```
 
-Automatic scan risk level: **MEDIUM**.
+### Local
+Open `index.html` directly in a modern browser. GitHub Pages is recommended for normal mobile use.
 
-Before publishing publicly, review `SECURITY_CHECKLIST.md` and ensure no company-sensitive data, real outlets, real coordinates, real transaction values, tokens, or internal logic that should remain private are embedded in `index.html`.
+## Data model / storage
 
+The application is static. Operational field data is not stored in this GitHub repository.
 
+- Browser persistence: local browser storage.
+- Parallel observers: each device records independently.
+- Portable source-of-truth: Visit JSON export.
+- Consolidation: Import & Merge Visit JSON files on the coordinator device.
+- Business/reporting output: Excel / print-PDF as provided by the application.
+
+Do **not** commit field-visit JSON, outlet data, salesman data, or other operational/confidential data into this repository.
+
+## Documentation
+
+See `/docs` for business logic, architecture, data dictionary, QA evidence, patch notes, changelog, deployment, and rollback guidance.
+
+## Current limitations
+
+See `docs/QA_REPORT.md` and `docs/PATCH_NOTES.md` for verified limitations and blocked tests.

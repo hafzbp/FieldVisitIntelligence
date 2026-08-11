@@ -1,0 +1,8 @@
+{
+  "product": "Nabati Field Visit Intelligence",
+  "version": "0.1.0",
+  "build_date": "2026-08-11",
+  "deployment": "static-github-pages",
+  "storage": "browser-localStorage",
+  "data_schema": "0.1"
+}
