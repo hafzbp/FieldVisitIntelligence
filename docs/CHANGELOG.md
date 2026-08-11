@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.4] - 2026-08-11
+
+### Fixed
+- Sanitized Visit and Call cloud UPSERT payloads so server-managed `created_at`, `updated_at`, and `last_edited_by` are never sent from the browser.
+- Existing failed queue items can be retried after deployment without re-entering field data.
+- Repeated pending UPSERTs for the same record are coalesced into the newest queue item.
+
+### Added
+- Clickable Sync badge.
+- Sync queue detail with original Supabase error text, entity, attempts, and per-row retry.
+- Retry All Errors action.
+- In-app QA diagnostics for IndexedDB, Auth session, profile, Supabase visibility/RLS behavior, and queue health.
+
+### Changed
+- Service worker GET strategy changed from cache-first to network-first with offline cache fallback to reduce stale GitHub Pages assets after releases.
+
+### Database
+- No new SQL migration. Schema remains `202608110003`.
+
 ## [0.3.2] - 2026-08-11
 
 ### Fixed
@@ -46,3 +65,13 @@
 ### Changed
 - Operational source of truth moves from localStorage to Supabase.
 - v0.2 JSON merge is no longer the normal multi-observer workflow.
+
+## [0.3.3] - 2026-08-11
+### Fixed
+- Reworked IndexedDB transaction lifecycle to prevent `IDBDatabase: The database connection is closing` startup failures.
+- Added automatic IndexedDB connection invalidation/reopen and retry for closing/inactive connection errors.
+- Added version-change/connection-close handling so stale browser connections are not reused.
+
+### QA
+- Local IndexedDB CRUD/reopen regression test added and passed in Chromium.
+- Supabase Auth/RLS end-to-end remains pending real-device verification after deployment.

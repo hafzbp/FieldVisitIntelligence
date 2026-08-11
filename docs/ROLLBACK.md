@@ -1,9 +1,20 @@
-# Rollback
+# Rollback — v0.3.4
 
-Frontend rollback target: `rollback/v0.2.0/index.html` or the previous Git commit/tag.
+## Rollback target
+v0.3.3
 
-Important:
-- v0.3 database data must not be deleted when rolling back frontend code.
-- Database migrations are additive; do not drop tables as a quick rollback.
-- Preserve Supabase backup/database before destructive schema changes in future releases.
-- v0.2 localStorage is not automatically deleted by v0.3 migration.
+## Database
+No Supabase schema migration is introduced by v0.3.4. Database schema remains `202608110003`, so no database rollback is required.
+
+## Frontend rollback
+1. Preserve/export any visible JSON backup if needed.
+2. Do **not** clear browser/site data while Sync Queue contains Pending/Error rows.
+3. Restore repository files from `rollback/v0.3.3/FieldVisitIntelligence_v0.3.3_source.zip` or revert the Git commit that deployed v0.3.4.
+4. Commit/push to `main` and wait for GitHub Pages deployment.
+5. Reload the app and verify the version badge.
+
+## Validation after rollback
+- Login Admin/JOVIS.
+- Confirm local queue remains present.
+- Confirm existing visits/calls remain visible locally/cloud according to RLS.
+- Do not assume failed queue records were acknowledged by Supabase; inspect them before clearing browser data.

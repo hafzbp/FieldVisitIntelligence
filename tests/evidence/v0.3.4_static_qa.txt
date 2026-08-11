@@ -1,0 +1,23 @@
+
+QA SUMMARY
+PASS - Version 0.3.4 
+PASS - Visit payload uses sanitizer 
+PASS - Call payload uses sanitizer 
+PASS - Visit whitelist excludes created_at 
+PASS - Call whitelist excludes created_at 
+PASS - Visit whitelist excludes updated_at 
+PASS - Call whitelist excludes updated_at 
+PASS - Visit whitelist excludes last_edited_by 
+PASS - Call whitelist excludes last_edited_by 
+PASS - Queue coalesces duplicate record 
+PASS - Queue exposes retry item 
+PASS - Queue exposes retry all errors 
+PASS - Sync error detail UI exists 
+PASS - Diagnostic panel exists 
+PASS - Sync badge is clickable 
+PASS - Service worker network-first 
+PASS - Service worker cache v0.3.4 
+PASS - No Supabase secret key value in repo 
+PASS - JavaScript syntax 
+
+19 PASS / 0 FAIL
