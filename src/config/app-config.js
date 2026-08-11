@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.3.7';
+export const APP_VERSION = '0.3.8';
 export const APP_NAME = 'Field Visit Intelligence';
 export const DB_NAME = 'fvi_v030';
 export const DB_VERSION = 1;
@@ -6,6 +6,7 @@ export const DB_VERSION = 1;
 export const FEATURE_FLAGS = {
   adminAutoRefresh: true,
   adminAutoRefreshSeconds: 60,
+  backgroundPullSeconds: 60,
   localJsonBackup: true,
   taxonomyDiscovery: true,
   recoveryTracking: false,

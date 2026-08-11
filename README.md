@@ -1,4 +1,4 @@
-# Field Visit Intelligence v0.3.7
+# Field Visit Intelligence v0.3.8
 
 Mobile-first field visit application for EC/SC 90% Non-EC validation.
 
@@ -37,7 +37,7 @@ Only the Supabase Project URL and Publishable Key may be stored in the frontend 
 Never store a Supabase Secret key, service_role key, database password, or user password in GitHub.
 
 
-## v0.3.7 configuration
+## v0.3.8 configuration
 Frontend is preconfigured for Supabase project ref `gxwysmjttzqppiadryjc` using the publishable client key. No Supabase secret/service-role key is stored in this repository. Database migrations still must be executed in the target Supabase project before cloud features can function.
 
 ## v0.3.2 database hotfix (retained)
@@ -70,3 +70,18 @@ After v0.3.7 is uploaded, run this once in Supabase SQL Editor:
 `supabase/migrations/202608110004_add_call_checkin_location.sql`
 
 Do not skip this migration: the frontend will send the new check-in / checkout fields to Supabase.
+
+
+## v0.3.8 Cross-Device Delete Reconciliation
+- Admin soft-delete tombstones now propagate to JOVIS/device local caches.
+- Stale local pending edits cannot resurrect Admin-deleted rows.
+- Background inbound refresh runs every 60 seconds outside active field capture and when the app regains focus.
+- Deleted Visit drafts are cleared locally.
+- Call ownership is enforced against the parent Visit.
+
+### Required database migration for v0.3.8
+Run after migration 004:
+
+`supabase/migrations/202608110005_protect_soft_delete_tombstones.sql`
+
+Target: `Success. No rows returned`.

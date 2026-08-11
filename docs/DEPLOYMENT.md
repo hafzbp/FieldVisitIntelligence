@@ -26,3 +26,15 @@ Before field use of v0.3.7, run in Supabase SQL Editor:
 Target result: `Success. No rows returned`.
 
 Then upload the v0.3.7 repository files to GitHub Pages. Verify the header shows `v0.3.7` before testing GPS check-in.
+
+
+## v0.3.8 required migration
+Before using v0.3.8, confirm migration 004 has already been run, then run:
+
+`supabase/migrations/202608110005_protect_soft_delete_tombstones.sql`
+
+Target result: `Success. No rows returned`.
+
+Then upload the v0.3.8 repository files to GitHub Pages and verify the header shows `v0.3.8`.
+
+Final smoke test: Admin deletes one test Visit, then the JOVIS account/device must stop showing it after refocus/refresh without clearing browser data.

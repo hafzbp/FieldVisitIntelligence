@@ -94,3 +94,22 @@
 ### QA
 - Local IndexedDB CRUD/reopen regression test added and passed in Chromium.
 - Supabase Auth/RLS end-to-end remains pending real-device verification after deployment.
+
+## [0.3.8] - 2026-08-11
+
+### Fixed
+- Admin soft-delete now reconciles across all JOVIS/device IndexedDB caches.
+- Deleted Visit/Call tombstones are fetched from Supabase and overwrite stale active local copies.
+- Stale pending local edits for a cloud-deleted row are discarded instead of resurrecting deleted data.
+- Deleted Visit drafts and selected routes are cleaned automatically.
+
+### Added
+- 60-second inbound cloud refresh outside active field entry/setup.
+- Pull-on-focus / pull-on-visibility for faster cross-device convergence.
+- Migration `202608110005_protect_soft_delete_tombstones.sql` for tombstone and Call-parent integrity protection.
+
+### Database
+- Schema version is now `202608110005`.
+
+### QA
+- 90 PASS / 0 FAIL across retained automated/static regression suites.

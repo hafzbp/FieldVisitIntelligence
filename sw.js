@@ -1,4 +1,4 @@
-const CACHE='fvi-v0.3.7';
+const CACHE='fvi-v0.3.8';
 const LOCAL=['./','./index.html','./assets/styles.css','./assets/nabati-logo.png','./manifest.webmanifest','./src/ui/app.js','./src/config/app-config.js','./src/config/supabase-config.js','./src/config/utils.js','./src/data/local-db.js','./src/data/supabase-client.js','./src/data/cloud-repository.js','./src/data/sync-engine.js','./src/auth/auth-service.js','./src/domain/reason-engine.js','./src/domain/analysis-engine.js','./src/export/exporter.js'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(LOCAL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -1,41 +1,41 @@
-# QA Report — Field Visit Intelligence v0.3.7
+# QA Report — Field Visit Intelligence v0.3.8
 
-## Scope
-Static/unit QA for mandatory call check-in, browser geolocation wiring, Kode Toko normalization, checkout duration capture, Supabase payload fields, migration presence, export fields, sync regression, and JavaScript syntax.
+## Release purpose
+Release-candidate hardening for cross-device soft-delete reconciliation and data-integrity protection before field use.
 
-## Result
-**41 PASS / 0 FAIL**
+## Automated/static result
+**90 PASS / 0 FAIL** across the retained regression suites:
 
-Executed with:
+- `tests/unit/test_v034.py` → 21 PASS / 0 FAIL
+- `tests/unit/test_v037.py` → 41 PASS / 0 FAIL
+- `tests/unit/test_v038.py` → 28 PASS / 0 FAIL
 
-```text
-python tests/unit/test_v037.py
-```
+## v0.3.8 checks
+- Supabase fetch includes `is_deleted=true` Visit and Call tombstones.
+- Remote Admin deletion overwrites stale local cache even when a stale local queue item exists.
+- Stale pending UPSERT queue items are removed when the same record is already tombstoned in cloud.
+- Draft calls belonging to a deleted Visit are removed locally.
+- A deleted Visit cannot continue rendering in Field or Analysis screens.
+- Admin-deleted rows remain excluded from active analysis/export/UI.
+- Background inbound refresh runs every 60 seconds outside active call capture/setup.
+- App pulls updates again when the browser/tab regains focus or visibility.
+- Background pull is disabled while the JOVIS is actively in `field` or `setup`, preventing form disruption.
+- Migration 005 prevents non-Admin clients from changing soft-delete state or editing a tombstoned row.
+- Migration 005 enforces Call owner = parent Visit owner.
+- Migration 005 blocks active Call insert/restore under a deleted Visit.
+- Existing GPS check-in, mandatory location, Kode Toko C-prefix, dwell-time capture, sync diagnostics, export, and queue deduplication remain present.
+- All JavaScript passes `node --check`.
+- Repository contains no Supabase secret/service-role key value.
 
-## Key PASS checks
-- Version and service-worker cache = v0.3.7.
-- `Kode Toko` uses fixed `C` prefix and numeric-only field entry.
-- New calls are gated behind `CHECK IN CALL #`.
-- Check-in invokes `navigator.geolocation.getCurrentPosition` with high-accuracy request.
-- Location denial / unavailable position prevents progressing into a new call.
-- Check-in timestamp and coordinates are persisted in the call draft.
-- Checkout timestamp and coordinates are captured before a new call can be saved.
-- Duration is calculated as checkout minus check-in.
-- An unfinished checked-in call prevents ending the field visit.
-- New fields are whitelisted in the Supabase call payload.
-- Migration `202608110004_add_call_checkin_location.sql` includes all required columns and range constraints.
-- Detailed export includes check-in, checkout, duration, GPS, Kode Toko and `09_DWELL_TIME_GPS`.
-- Existing sync-queue deduplication and invalid-status repair remain present.
-- No Supabase secret/service-role key value exists in the repository.
-- All JavaScript files pass `node --check`.
+## Remaining real-environment verification
+The following cannot be truthfully marked PASS from container/static QA and should be checked once after deployment:
 
-## Blocked / requires real-device verification
-The following cannot be truthfully marked PASS from static/container QA and must be tested after GitHub Pages deployment:
-- iOS/Android browser permission prompt behavior.
-- Actual GPS acquisition and accuracy on a physical phone.
-- Denied permission → retry after user changes browser/site permission.
-- Successful cloud persistence after migration 004 has been run in the target Supabase project.
-- Real check-in → checkout dwell-time behavior during a field call.
+1. Run migration `202608110005_protect_soft_delete_tombstones.sql` successfully in the target Supabase project.
+2. Admin deletes a test Visit → JOVIS account/device no longer shows it after refresh/refocus/background pull.
+3. JOVIS GPS permission prompt works on the actual iOS/Android browser.
+4. Check-in and checkout GPS/timestamp persist to Supabase.
+5. One test consolidated export opens correctly after real field rows exist.
 
-## Required deployment dependency
-Run migration `202608110004_add_call_checkin_location.sql` in Supabase before using v0.3.7 in production.
+## Release assessment
+**Code/static regression status: PASS.**
+Production readiness remains conditional only on the five real-environment verification items above.

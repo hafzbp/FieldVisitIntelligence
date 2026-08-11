@@ -41,8 +41,10 @@ export async function fetchDataset(){
   const sb=await getSupabase(); if(!sb) throw new Error('Supabase not configured');
   const [p,v,c,t,m] = await Promise.all([
     sb.from('profiles').select('*'),
-    sb.from('visits').select('*').eq('is_deleted',false).order('start_time',{ascending:false}),
-    sb.from('calls').select('*').eq('is_deleted',false).order('call_timestamp',{ascending:true}),
+    // Fetch tombstones too. Other devices need is_deleted=true rows to reconcile
+    // stale IndexedDB copies after an Admin deletes a visit/call.
+    sb.from('visits').select('*').order('start_time',{ascending:false}),
+    sb.from('calls').select('*').order('call_timestamp',{ascending:true}),
     sb.from('reason_taxonomy').select('*').eq('active',true).order('sort_order',{ascending:true}),
     sb.from('reason_mapping').select('*').eq('active',true)
   ]);
