@@ -1,0 +1,38 @@
+# Data files
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.parquet
+*.jsonl
+
+# Outputs / exports
+output/
+outputs/
+exports/
+results/
+run_results/
+*.zip
+*.7z
+*.rar
+
+# Secrets / env
+.env
+.env.*
+*.pem
+*.key
+*secret*
+*token*
+credentials*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node/Python artifacts if added later
+node_modules/
+__pycache__/
+.venv/
+venv/
