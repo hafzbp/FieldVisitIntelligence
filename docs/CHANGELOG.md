@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.7] - 2026-08-11
+
+### Added
+- Mandatory GPS check-in gate before starting each new call.
+- Check-in and checkout timestamps and coordinates with browser-reported accuracy.
+- Automatic `duration_seconds` calculation for time spent at the outlet.
+- Store-code (`Kode Toko`) input with fixed `C` prefix and numeric-only entry.
+- Dwell-time KPIs and `09_DWELL_TIME_GPS` export sheet.
+
+### Changed
+- New-call `call_timestamp` now uses the check-in timestamp for backward compatibility.
+- Saving a new call requires a successful checkout location capture.
+- Existing-call edit preserves original check-in / checkout timestamps and coordinates.
+
+### Database
+- Added migration `202608110004_add_call_checkin_location.sql`.
+- Schema version is now `202608110004`.
+
+
 ## [0.3.4] - 2026-08-11
 
 ### Fixed

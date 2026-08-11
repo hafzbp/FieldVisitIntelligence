@@ -10,10 +10,11 @@ const VISIT_FIELDS = [
 ];
 const CALL_FIELDS = [
   'id','visit_id','jovis_user_id','outlet_id','outlet_name','route_status','result',
-  'call_timestamp','omzet','observed_reason_code','custom_real_reason','contributing_factor',
-  'evidence','sfa_reason_code','reason_match_status','sfa_selection_reason','revisit_plan',
-  'can_revisit_earlier','followup_timing_reason','quick_note','client_created_at',
-  'client_updated_at','is_deleted','deleted_at'
+  'call_timestamp','checkin_at','checkout_at','checkin_latitude','checkin_longitude','checkin_accuracy_m',
+  'checkout_latitude','checkout_longitude','checkout_accuracy_m','duration_seconds','omzet',
+  'observed_reason_code','custom_real_reason','contributing_factor','evidence','sfa_reason_code',
+  'reason_match_status','sfa_selection_reason','revisit_plan','can_revisit_earlier',
+  'followup_timing_reason','quick_note','client_created_at','client_updated_at','is_deleted','deleted_at'
 ];
 
 function pickDefined(row, fields){
@@ -24,7 +25,16 @@ function pickDefined(row, fields){
   return out;
 }
 
-export function sanitizeVisitPayload(row){return pickDefined(row,VISIT_FIELDS)}
+export function sanitizeVisitPayload(row){
+  const payload=pickDefined(row,VISIT_FIELDS);
+  // v0.3.5 briefly used status='deleted' for soft-deleted visits. The database
+  // status constraint only accepts operational states. Repair old queued payloads
+  // transparently so users can Retry without clearing browser data.
+  if(!['active','completed'].includes(payload.status)){
+    payload.status = row?.end_time ? 'completed' : 'active';
+  }
+  return payload;
+}
 export function sanitizeCallPayload(row){return pickDefined(row,CALL_FIELDS)}
 
 export async function fetchDataset(){

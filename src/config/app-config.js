@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.3.5';
+export const APP_VERSION = '0.3.7';
 export const APP_NAME = 'Field Visit Intelligence';
 export const DB_NAME = 'fvi_v030';
 export const DB_VERSION = 1;
@@ -36,7 +36,7 @@ export const I18N = {
     connectRequired:'Supabase belum terhubung', connectHelp:'Isi Project URL dan Publishable Key di src/config/supabase-config.js, lalu deploy ulang.',
     startVisit:'Mulai Field Visit', resume:'Lanjutkan Visit', home:'Home', field:'Field', analysis:'Analisis', admin:'Admin', settings:'Pengaturan',
     depot:'Area / Depot', salesman:'Salesman', salesmanId:'Salesman ID', notes:'Catatan', date:'Tanggal',
-    outlet:'Outlet', outletId:'Outlet ID', route:'Route', result:'Hasil', omzet:'Omzet EC (Rp)',
+    outlet:'Nama Toko', outletId:'Kode Toko', route:'Route', result:'Hasil', omzet:'Omzet EC (Rp)',
     observedReason:'Alasan Non-EC Aktual', customReason:'Sebutkan alasan riil', factor:'Faktor Pendukung', evidence:'Bukti / Kondisi yang Diamati',
     sfaReason:'Reason Non-EC di SFA', revisit:'Rencana Kunjungan Ulang', earlier:'Bisa Dikunjungi Lebih Cepat?', timing:'Alasan Menentukan Waktu Follow-up',
     saveNext:'Simpan & Call Berikutnya', endVisit:'Selesaikan Field Visit', edit:'Edit', delete:'Hapus', synced:'Tersinkron', pending:'menunggu sinkronisasi', offline:'Offline', syncing:'Sinkronisasi', syncError:'Sync Error',
@@ -53,7 +53,7 @@ export const I18N = {
     connectRequired:'Supabase is not connected', connectHelp:'Fill the Project URL and Publishable Key in src/config/supabase-config.js, then redeploy.',
     startVisit:'Start Field Visit', resume:'Resume Visit', home:'Home', field:'Field', analysis:'Analysis', admin:'Admin', settings:'Settings',
     depot:'Area / Depot', salesman:'Salesman', salesmanId:'Salesman ID', notes:'Notes', date:'Date',
-    outlet:'Outlet', outletId:'Outlet ID', route:'Route', result:'Result', omzet:'EC Revenue (IDR)',
+    outlet:'Store Name', outletId:'Store Code', route:'Route', result:'Result', omzet:'EC Revenue (IDR)',
     observedReason:'Actual Non-EC Reason', customReason:'Specify actual reason', factor:'Contributing Factor', evidence:'Evidence / Observed Condition',
     sfaReason:'SFA Non-EC Reason', revisit:'Planned Revisit', earlier:'Can Revisit Earlier?', timing:'Reason Determining Follow-up Timing',
     saveNext:'Save & Next Call', endVisit:'End Field Visit', edit:'Edit', delete:'Delete', synced:'Synced', pending:'pending sync', offline:'Offline', syncing:'Syncing', syncError:'Sync Error',

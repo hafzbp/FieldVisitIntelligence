@@ -32,3 +32,14 @@ A partial unique index enforces this server-side.
 JOVIS may edit their own completed visits/calls.
 Admin may edit all visible JOVIS data.
 Call updates produce server-side audit history.
+
+## v0.3.7 — Call Check-in / Dwell Time Logic
+
+1. A new call cannot expose the call-entry form until `CHECK IN CALL #N` succeeds.
+2. Check-in triggers browser geolocation permission / acquisition.
+3. If permission is denied, GPS is disabled, position is unavailable, or the request times out, the call remains locked and the observer must retry.
+4. On successful check-in, the app stores check-in timestamp, latitude, longitude, and accuracy; `call_timestamp` is set equal to `checkin_at` for backward compatibility.
+5. `Kode Toko` accepts numeric input only and is stored as `C` + digits without spaces.
+6. On `Simpan & ke Call Berikutnya`, a second location acquisition is mandatory for new calls. The app then stores checkout timestamp/location and calculates `duration_seconds`.
+7. Editing an existing call does not replace the original check-in / checkout timestamps or coordinates.
+8. A visit cannot be ended while a newly checked-in call is still unfinished.

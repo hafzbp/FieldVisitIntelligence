@@ -1,4 +1,4 @@
-# Field Visit Intelligence v0.3.4
+# Field Visit Intelligence v0.3.7
 
 Mobile-first field visit application for EC/SC 90% Non-EC validation.
 
@@ -37,7 +37,7 @@ Only the Supabase Project URL and Publishable Key may be stored in the frontend 
 Never store a Supabase Secret key, service_role key, database password, or user password in GitHub.
 
 
-## v0.3.4 configuration
+## v0.3.7 configuration
 Frontend is preconfigured for Supabase project ref `gxwysmjttzqppiadryjc` using the publishable client key. No Supabase secret/service-role key is stored in this repository. Database migrations still must be executed in the target Supabase project before cloud features can function.
 
 ## v0.3.2 database hotfix (retained)
@@ -54,3 +54,19 @@ This fixes profile-role updates while preserving `last_edited_by` on visits/call
 - The Sync badge is clickable and opens Sync & QA Diagnostics.
 - Diagnostic checks cover local IndexedDB, authenticated session, profile, database visibility/RLS behavior, and queue state.
 - Service worker now uses network-first fetch with cache fallback to reduce stale GitHub Pages deployments.
+
+
+## v0.3.7 Call Check-in & Dwell Time
+- Mandatory browser geolocation before a new call can start.
+- Check-in timestamp + latitude/longitude/accuracy.
+- Checkout timestamp + latitude/longitude/accuracy when saving the call.
+- Automatic call duration calculation.
+- `Kode Toko` UI with fixed `C` prefix and numeric-only input.
+- Detailed export now includes GPS and dwell-time fields.
+
+### Required database migration
+After v0.3.7 is uploaded, run this once in Supabase SQL Editor:
+
+`supabase/migrations/202608110004_add_call_checkin_location.sql`
+
+Do not skip this migration: the frontend will send the new check-in / checkout fields to Supabase.

@@ -41,3 +41,19 @@
 | client_updated_at | Latest device-side edit time |
 | updated_at | Server-side update time |
 | last_edited_by | User performing latest server update |
+
+## v0.3.7 call check-in fields
+
+| Field | Meaning |
+|---|---|
+| `outlet_id` | Kode Toko. New UI canonicalizes numeric input to `C` + digits, e.g. `C9899421`. |
+| `checkin_at` | Timestamp captured when the observer presses Check In Call and mandatory geolocation succeeds. |
+| `checkout_at` | Timestamp captured when the observer saves/finishes the call and checkout geolocation succeeds. |
+| `checkin_latitude` | Latitude at check-in. |
+| `checkin_longitude` | Longitude at check-in. |
+| `checkin_accuracy_m` | Browser-reported check-in geolocation accuracy in meters. |
+| `checkout_latitude` | Latitude at checkout. |
+| `checkout_longitude` | Longitude at checkout. |
+| `checkout_accuracy_m` | Browser-reported checkout geolocation accuracy in meters. |
+| `duration_seconds` | `checkout_at - checkin_at`, rounded to seconds and constrained to non-negative values. |
+| `call_timestamp` | Backward-compatible call timestamp. For new v0.3.7 calls it equals `checkin_at`. |

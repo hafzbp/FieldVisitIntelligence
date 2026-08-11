@@ -12,9 +12,12 @@ sync=(root/'src/data/sync-engine.js').read_text()
 sw=(root/'sw.js').read_text()
 app=(root/'src/ui/app.js').read_text()
 
-check('Version 0.3.5', "APP_VERSION = '0.3.5'" in cfg)
+check('Version 0.3.7', "APP_VERSION = '0.3.7'" in cfg)
 check('Visit payload uses sanitizer', 'sanitizeVisitPayload(row)' in cloud and "upsert(payload" in cloud)
 check('Call payload uses sanitizer', 'sanitizeCallPayload(row)' in cloud)
+
+check('Legacy deleted status repaired before cloud upsert', "!['active','completed'].includes(payload.status)" in cloud and "row?.end_time ? 'completed' : 'active'" in cloud)
+check('Admin soft delete does not assign invalid deleted status', "status:v.status==='active'?'deleted':v.status" not in app)
 for bad in ['created_at','updated_at','last_edited_by']:
     # ensure not present inside whitelist blocks
     visit_block=re.search(r'const VISIT_FIELDS = \[(.*?)\];',cloud,re.S).group(1)
@@ -28,7 +31,7 @@ check('Sync error detail UI exists', 'Last Error' in app and 'data-retry-queue' 
 check('Diagnostic panel exists', 'runQaDiagnostics' in app and 'diagnosticSnapshot' in app)
 check('Sync badge is clickable', 'data-action="openDiagnostics"' in app)
 check('Service worker network-first', "fetch(e.request).then" in sw and ".catch(()=>caches.match(e.request))" in sw)
-check('Service worker cache v0.3.5', "CACHE='fvi-v0.3.5'" in sw)
+check('Service worker cache v0.3.7', "CACHE='fvi-v0.3.7'" in sw)
 
 # Detect actual secret values, not documentation terms.
 secret_hits=[]
