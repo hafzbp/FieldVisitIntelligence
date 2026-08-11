@@ -1,0 +1,9 @@
+{
+  "name":"Nabati Field Visit Intelligence",
+  "short_name":"FVI",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f6f7f9",
+  "theme_color":"#ef1f2f",
+  "icons":[{"src":"assets/nabati-logo.png","sizes":"any","type":"image/png","purpose":"any"}]
+}

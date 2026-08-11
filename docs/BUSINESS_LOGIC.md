@@ -1,96 +1,34 @@
-# BUSINESS LOGIC — v0.2.0
+# Business Logic
 
-## Business Objective
-Support EC/SC 90% field validation through two primary objectives:
-1. Validate whether SFA Non-EC reasons represent the actual outlet condition.
-2. Record what follow-up is planned after a Non-EC event and why that timing is chosen.
+## Objective A — Actual Non-EC reason validation
+Observer captures the actual primary reason before recording the SFA reason selected by the salesman.
 
-The tool must capture facts first and avoid treating suspected miscoding as proven misconduct.
+Classification:
+- MATCH: SFA reason = primary observed reason.
+- PARTIAL: SFA reason = contributing factor, but not primary reason.
+- MISMATCH: SFA reason differs from primary reason and is not the contributing factor.
+- UNCLEAR: insufficient evidence / reason unavailable.
 
-## Core Workflow
-```text
-Actual outlet event
--> Actual Non-EC reason
--> Raw custom reason if Other
--> Optional contributing factor
--> Evidence
--> SFA reason selected independently
--> Match classification
--> Follow-up plan
--> Timing feasibility / timing reason
--> Save
--> Analysis / evidence trace
-```
+## Objective B — Taxonomy discovery
+`Other / Lainnya` is not treated as a terminal analytical bucket.
+When Other is selected, `custom_real_reason` is mandatory and the raw text is preserved.
+The Admin export exposes every custom reason and evidence row so downstream analysis can cluster repeated field language and propose a new granular E-Work taxonomy.
 
-## Rule BR-001 — Call Timestamp
-When EC or Non-EC is first selected, `callAt` is set automatically. Editing a saved call does not replace the original `callAt`; edits create `lastEditedAt`.
+The app does not automatically invent or semantically merge new reasons in v0.3.0.
 
-## Rule BR-002 — EC Omzet
-If result is EC, observer may enter `orderValue`. It is optional. Only entered positive values contribute to Total Omzet and Avg Omzet / EC.
+## Objective C — Follow-up validation
+Non-EC captures planned revisit, whether an earlier revisit is possible, and the operational reason/signal determining follow-up timing.
+Actual recovery outcome is reserved for a future version.
 
-## Rule BR-003 — Actual Reason Before SFA Reason
-For Non-EC, the actual observed reason is captured before SFA reason to reduce observer anchoring to SFA classification.
+## EC
+Omzet is mandatory whenever Result = EC.
+The database also enforces non-null omzet for EC.
 
-## Rule BR-004 — Other / Lainnya
-If actual primary reason is `Other`, `customObservedReason` is mandatory.
-- The raw text is preserved.
-- Analysis normalizes lowercase and repeated whitespace for counting.
-- The raw custom label appears as a separate actual-reason category in the mismatch matrix and `New / Unmapped Actual Reasons` report.
+## One active visit
+One authenticated JOVIS account may have at most one active visit.
+A partial unique index enforces this server-side.
 
-Example:
-`Produk slow moving` and `produk   slow moving` are grouped under one normalized count while the displayed label remains a raw field label.
-
-## Rule BR-005 — Contributing Factor
-A contributing factor is optional and hidden by default. It is not treated as the primary business reason.
-
-## Rule BR-006 — Reason Classification
-For Non-EC:
-- **MATCH:** SFA reason ID = actual primary reason ID.
-- **PARTIAL:** SFA reason differs from primary but equals the optional contributing-factor reason ID.
-- **MISMATCH:** SFA reason differs from both primary and contributing-factor reason.
-- **UNCLEAR:** actual primary or SFA reason is missing/unclear.
-
-`Other` can be a Match when actual category is Other and SFA category is Other; the raw custom actual reason remains separately visible so missing taxonomy can still be discovered.
-
-## Rule BR-007 — Follow-up
-The observer records:
-- D+1
-- D+2
-- D+3
-- Within 1 Week
-- Next JKS
-- WA / Phone
-- No Follow-up
-- Unknown
-
-`Can Revisit Earlier?` records whether an earlier revisit is operationally feasible. `Reason for Follow-up Timing` records why the selected timing is used (JKS, PIC request, stock, workload, distance, outlet information, etc.).
-
-## Rule BR-008 — Draft Persistence
-Each active visit has an auto-saved draft in localStorage. Text input and selection changes update the draft. Normal browser restart can restore the draft from the same origin/browser profile.
-
-## Rule BR-009 — Multi-Observer Merge
-Each device has a generated `deviceId`; each visit and call has a unique ID.
-- New Visit ID -> append visit.
-- Existing Visit ID -> merge calls by Call ID.
-- Same Call ID on both copies -> record with the later `updatedAt` wins.
-- Imported visits from another device do not become the current device's active visit.
-
-## Rule BR-010 — Findings
-Auto-conclusions are rule-based. They may identify:
-- insufficient sample,
-- low/medium/high reason reliability,
-- SFA reason with elevated mismatch,
-- possible broad/default classification,
-- inconsistent PIC follow-up timing,
-- concentration on Next JKS,
-- newly observed custom reasons.
-
-The application explicitly does not infer intentional miscoding from mismatch alone.
-
-## Business Risk if Logic is Wrong
-- False accusation that salesmen are miscoding reasons.
-- Incorrect redesign of SFA taxonomy.
-- Incorrect follow-up trial prioritization.
-- Loss of field evidence or attribution across observers.
-
-Therefore raw evidence, raw custom reasons, visit/call IDs, timestamps, and edit timestamps are retained in exports.
+## Editing
+JOVIS may edit their own completed visits/calls.
+Admin may edit all visible JOVIS data.
+Call updates produce server-side audit history.

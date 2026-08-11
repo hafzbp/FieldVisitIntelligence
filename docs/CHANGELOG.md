@@ -1,31 +1,19 @@
-# CHANGELOG
+# Changelog
 
-## [0.2.0] - 2026-08-11
-
+## [0.3.0] - 2026-08-11
 ### Added
-- Indonesian/English language mode.
-- Auto-saved unfinished call draft.
-- Visit start/end timestamps and per-call timestamp.
-- EC omzet/order value.
-- Visible edit workflow with edit timestamp.
-- Mandatory custom actual-reason text for `Other`.
-- Optional contributing factor.
-- New / Unmapped Actual Reasons analysis.
-- Visit JSON export.
-- Multi-file Import & Merge.
-- Combined analysis and combined Excel export.
-- Device ID traceability.
-- v0.1 schema/localStorage migration.
+- Supabase Auth and database integration architecture.
+- Admin/JOVIS authorization through RLS.
+- IndexedDB local-first sync queue.
+- Mandatory EC omzet.
+- Admin consolidated dashboard.
+- Call audit trail.
+- One active visit per JOVIS.
+- Detailed ChatGPT-ready analytical export.
+- Unmapped actual-reason discovery module.
+- v0.2 local-data migration.
+- Service worker / installable web app support.
 
 ### Changed
-- `Secondary Reason` -> optional `Contributing Factor`.
-- `Constraint / Signal` -> `Reason for Follow-up Timing` / `Alasan Menentukan Waktu Follow-up`.
-- Follow-up options use stable internal codes independent of display language.
-- Recent call editing is surfaced directly in the field screen.
-
-### Preserved
-- Mobile-first static GitHub Pages deployment.
-- No dummy field data.
-- SFA vs actual reason Match/Partial/Mismatch/Unclear logic.
-- Rule-based conclusions.
-- Local-only runtime with no external API/dependency.
+- Operational source of truth moves from localStorage to Supabase.
+- v0.2 JSON merge is no longer the normal multi-observer workflow.

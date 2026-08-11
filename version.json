@@ -1,9 +1,1 @@
-{
-  "product": "Field Visit Intelligence",
-  "version": "0.2.0",
-  "previous_version": "0.1.0",
-  "date": "2026-08-11",
-  "deployment": "GitHub Pages / static HTML",
-  "storage_schema": "nabati_fvi_v0_2",
-  "legacy_storage_read": ["nabati_fvi_v0_1"]
-}
+{"product":"Field Visit Intelligence","version":"0.3.0","release_date":"2026-08-11","schema_version":"202608110002","frontend":"GitHub Pages","backend":"Supabase"}

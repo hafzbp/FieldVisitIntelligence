@@ -1,0 +1,10 @@
+export const uid = (prefix='id') => `${prefix}_${crypto.randomUUID()}`;
+export const nowISO = () => new Date().toISOString();
+export const today = () => new Date().toISOString().slice(0,10);
+export const esc = (s='') => String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+export const num = v => Number.isFinite(Number(v)) ? Number(v) : 0;
+export const pct = (a,b) => b ? Math.round((a/b)*1000)/10 : 0;
+export const fmtCurrency = v => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(num(v));
+export const fmtTime = iso => iso ? new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit'}).format(new Date(iso)) : '-';
+export const fmtDate = d => d ? new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(`${d}T00:00:00`)) : '-';
+export const normalize = s => String(s||'').trim().toLowerCase().replace(/\s+/g,' ');

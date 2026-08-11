@@ -1,108 +1,49 @@
-# PATCH NOTES — v0.2.0
+# Patch Notes — v0.2.0 → v0.3.0
 
-## Previous Version
-v0.1.0
+## Problem
+v0.2 stores each observer's visit in a separate browser and requires manual JSON merge for consolidated analysis.
 
-## New Version
-v0.2.0
+## Root cause
+The application had no central identity, central database, or row-level access model.
 
-## Patch Objective
-Convert the single-device field prototype into a safer local-first field trial tool that can be used by parallel observers and better captures real Non-EC reasons.
+## Resolution
+v0.3 introduces Supabase Auth/Postgres/RLS while retaining a local offline queue.
 
-## Root Causes Identified from Hands-on Use
-1. v0.1 data was local to one browser with no practical parallel-observer consolidation flow.
-2. Saved data persisted, but unfinished draft recovery was not explicit.
-3. Visit/call timestamps were stored incompletely or not visible/exported.
-4. EC did not capture omzet.
-5. Edit capability existed but was not discoverable enough.
-6. `Secondary Reason` was cognitively ambiguous.
-7. Selecting `Other` lost the actual new reason because evidence text was not a structured real-reason label.
-8. UI was English-only for field users.
-9. Follow-up labels `Can Revisit Earlier?` and `Constraint / Signal` were not self-explanatory.
+## Business impact
+- Parallel JOVIS field visits become centrally visible to Admin.
+- Detailed raw evidence remains exportable for manual ChatGPT analysis.
+- Unmapped actual reasons become an explicit research dataset for future E-Work taxonomy design.
 
-## What Changed
-- Added local-first multi-observer Visit JSON export and Import & Merge.
-- Added combined analysis across all imported visits.
-- Added Device ID, Visit ID, Call ID traceability.
-- Added draft auto-save.
-- Added visible Visit Start/End and Call Timestamp.
-- Added `lastEditedAt`; original `callAt` remains unchanged after edit.
-- Added optional EC omzet and omzet KPIs/export.
-- Added prominent Recent Calls Edit button and completed-call editing from Call Log.
-- Renamed real reason screen and made `Other` require `customObservedReason`.
-- Added `New / Unmapped Actual Reasons` analysis.
-- Replaced default Secondary Reason with optional `Contributing Factor`.
-- Renamed `Constraint / Signal` to `Reason for Follow-up Timing` / `Alasan Menentukan Waktu Follow-up`.
-- Added Indonesian/English toggle.
-- Added v0.1 localStorage migration.
+## Architecture impact
+MAJOR change: single-file/local-only prototype → modular static web app + cloud backend.
 
-## Exact Revised Locations — Single HTML
-### Store module
-- `Store.load()`
-- `Store.migrate()`
-- `Store.migrateVisit()`
-- `Store.migrateCall()`
-- `Store.saveDraft()` / `Store.getDraft()` / `Store.clearDraft()`
-- `Store.mergePayload()`
+## Migration
+v0.2 localStorage can be copied into the authenticated user's v0.3 dataset through Settings. Original v0.2 data is not deleted.
 
-### Domain module
-- `Domain.newVisit()`
-- `Domain.newCall()`
-- `Domain.observedKey()`
-- `Domain.observedLabel()`
-- `Domain.classify()`
-- `Domain.saveCall()`
-
-### Analyzer module
-- `Analyzer.analyzeCalls()`
-- `Analyzer.combined()`
-- `Analyzer.findings()`
-
-### Exporter module
-- `Exporter.visitPackage()`
-- `Exporter.backup()`
-- `Exporter.callsRows()`
-- `Exporter.excelForVisits()`
-
-### UI module
-- Language chrome/toggle
-- Visit setup
-- Mobile Call Stage 0-3
-- Recent Calls
-- Individual/combined Analysis
-- New Reasons tab
-- Call Log edit controls
-- Settings > Data, Backup & Multi-Observer
+## Exact revised locations
+- `index.html` — modular application entry point.
+- `assets/styles.css` — mobile-first UI.
+- `src/config/supabase-config.js` — public Supabase connection configuration.
+- `src/config/app-config.js` — version, feature flags, translations, default taxonomy.
+- `src/data/local-db.js` — IndexedDB local cache/draft/queue storage.
+- `src/data/supabase-client.js` — Supabase browser client.
+- `src/data/cloud-repository.js` — database read/write adapter.
+- `src/data/sync-engine.js` — offline queue and retry logic.
+- `src/auth/auth-service.js` — email/password session flow.
+- `src/domain/reason-engine.js` — actual/SFA classification.
+- `src/domain/analysis-engine.js` — deterministic consolidated analytics.
+- `src/export/exporter.js` — detailed 9-sheet analytical workbook.
+- `src/ui/app.js` — JOVIS field flow + Admin command center.
+- `supabase/migrations/202608110001_initial_fvi_schema.sql` — schema/RLS/audit/constraints.
+- `sw.js` — application caching.
 
 ## Previous vs New
-| Area | v0.1.0 | v0.2.0 | Reason | Business Impact |
+| Area | v0.2.0 | v0.3.0 | Reason | Impact |
 |---|---|---|---|---|
-| Storage | One-browser local state | Local state + draft + Visit JSON | Parallel field use | Safer trial operations |
-| Parallel observers | Separate data with no merge workflow | JSON import/merge + combined analysis | Two+ observers | Consolidated field evidence |
-| Call time | Internal created/updated time only | Explicit callAt + lastEditedAt | Trace timing | Call sequence/time analysis possible |
-| Visit time | Internal timestamp not prominent | Start/end visible and exported | Operational trace | Visit duration available |
-| EC value | Not captured | Optional omzet | User request | Adds value/productivity context |
-| Edit | Hidden in history flow | Visible recent/edit + completed call edit | Discoverability failure | Easier correction |
-| Other reason | Generic Other + evidence only | Mandatory raw actual reason | Preserve emerging causes | New taxonomy discovery |
-| Secondary reason | Always visible | Optional contributing factor | Reduced ambiguity | Faster field entry |
-| Language | English | Indonesian/English | Field adoption | Easier salesman/observer use |
-| Follow-up wording | Constraint / Signal | Reason for Follow-up Timing | Ambiguous term | Clearer data capture |
-| Analysis | Per visit | Per visit + combined | Multi-observer need | Cross-session pattern view |
-
-## Business Logic Impact
-Reason accuracy remains based on actual primary reason vs SFA reason. New custom actual reasons are no longer collapsed into an undifferentiated `Other` count in analysis.
-
-## IT / Architecture Impact
-Storage schema changes from v0.1 to v0.2. A migration layer reads the old key and writes the migrated state under a new v0.2 key. No backend was added.
-
-## Risks
-- Manual JSON exchange can create operational discipline requirements.
-- localStorage is device/browser specific and unencrypted.
-- Custom free-text reasons can still fragment due synonyms/spelling; only case/whitespace normalization is automatic.
-- Multiple edits on disconnected copies of the same Visit/Call resolve by latest `updatedAt`.
-
-## Rollback
-1. Keep a full v0.2 JSON backup before rollback.
-2. Restore repository `index.html` from v0.1.0.
-3. v0.1 will continue reading its original `nabati_fvi_v0_1` key; v0.2 does not delete it during migration.
-4. Data created only in v0.2 cannot be imported directly into v0.1 without conversion.
+| Identity | Observer text field | Supabase Auth user | Multi-user ownership | Traceable JOVIS data |
+| Storage | Browser localStorage | Supabase + IndexedDB queue | Parallel observers | Central Admin view |
+| Consolidation | JSON manual merge | Server dataset | Remove manual merge | Admin sees all authorized rows |
+| Security | Device-local only | RLS | User separation | JOVIS cannot read peers |
+| Editing | Local overwrite | Cloud update + audit | Admin/JOVIS can edit completed data | Traceability |
+| Other reason | Local discovery | Central discovery + detailed export | E-Work taxonomy research | Cross-JOVIS compilation |
+| Export | Detailed local workbook | Detailed filtered/consolidated workbook | Manual ChatGPT analysis | Raw evidence retained |
