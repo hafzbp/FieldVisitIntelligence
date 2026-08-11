@@ -1,5 +1,8 @@
 # Setup Supabase — Beginner Guide
 
+> **v0.3.1 note:** This package is already configured with Supabase project `gxwysmjttzqppiadryjc` using its Project URL and Publishable Key. You can skip any step that asks you to paste those two frontend values. Do not add a Secret/Service Role key.
+
+
 This guide assumes you have never used Supabase before.
 
 ## What you need
@@ -113,7 +116,7 @@ version.json
 
 Commit example:
 
-`Release Field Visit Intelligence v0.3.0 - Supabase multi-user`
+`Release Field Visit Intelligence v0.3.1 - Supabase connected`
 
 GitHub Pages will serve `index.html`.
 

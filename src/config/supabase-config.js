@@ -1,8 +1,8 @@
 // Safe for GitHub Pages: use ONLY the Supabase Project URL + Publishable Key.
 // NEVER place a Supabase secret key / service_role key in this repository.
 export const SUPABASE_CONFIG = {
-  url: 'PASTE_YOUR_SUPABASE_PROJECT_URL_HERE',
-  publishableKey: 'PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE'
+  url: 'https://gxwysmjttzqppiadryjc.supabase.co',
+  publishableKey: 'sb_publishable_7aGBaUmYSIHa0_YOsrue8g_SyqkWIYG'
 };
 
 export function isSupabaseConfigured() {
