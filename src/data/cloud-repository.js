@@ -40,20 +40,37 @@ export function sanitizePhotoPayload(row){return pickDefined(row,PHOTO_FIELDS)}
 
 export async function fetchDataset(){
   const sb=await getSupabase();if(!sb)throw new Error('Supabase not configured');
-  const [p,v,c,t,m,rd,si,ra,ph,aset]=await Promise.all([
+  // Core field data is mandatory. Rich v0.4 child tables are loaded separately so
+  // a permission/schema problem in one optional table can never hide Visits/Calls
+  // from Admin or JOVIS. Diagnostics still report every degraded table explicitly.
+  const [p,v,c,t,m]=await Promise.all([
     sb.from('profiles').select('*'),
     sb.from('visits').select('*').order('start_time',{ascending:false}),
     sb.from('calls').select('*').order('call_timestamp',{ascending:true}),
     sb.from('reason_taxonomy').select('*').eq('active',true).order('sort_order',{ascending:true}),
-    sb.from('reason_mapping').select('*').eq('active',true),
+    sb.from('reason_mapping').select('*').eq('active',true)
+  ]);
+  for(const r of [p,v,c,t,m])if(r.error)throw r.error;
+
+  const optional=await Promise.allSettled([
     sb.from('call_reason_details').select('*'),
     sb.from('call_stock_items').select('*').order('created_at',{ascending:true}),
     sb.from('call_recovery_attempts').select('*').order('attempted_at',{ascending:true}),
     sb.from('call_photos').select('*').order('created_at',{ascending:true}),
     sb.from('app_settings').select('*')
   ]);
-  for(const r of [p,v,c,t,m,rd,si,ra,ph,aset])if(r.error)throw r.error;
-  return {profiles:p.data||[],visits:v.data||[],calls:c.data||[],taxonomy:t.data||[],reasonMappings:m.data||[],reasonDetails:rd.data||[],stockItems:si.data||[],recoveryAttempts:ra.data||[],photos:ph.data||[],appSettings:aset.data||[]};
+  const names=['call_reason_details','call_stock_items','call_recovery_attempts','call_photos','app_settings'];
+  const values=[];const warnings=[];
+  optional.forEach((settled,i)=>{
+    if(settled.status==='rejected'){
+      warnings.push(`${names[i]}: ${settled.reason?.message||settled.reason}`);values.push([]);return;
+    }
+    const r=settled.value;
+    if(r?.error){warnings.push(`${names[i]}: ${r.error.message||r.error}`);values.push([]);return;}
+    values.push(r?.data||[]);
+  });
+  const [rd,si,ra,ph,aset]=values;
+  return {profiles:p.data||[],visits:v.data||[],calls:c.data||[],taxonomy:t.data||[],reasonMappings:m.data||[],reasonDetails:rd||[],stockItems:si||[],recoveryAttempts:ra||[],photos:ph||[],appSettings:aset||[],warnings};
 }
 
 async function upsert(table,row,fields,onConflict='id'){
