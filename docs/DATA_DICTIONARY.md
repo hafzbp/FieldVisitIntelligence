@@ -1,59 +1,95 @@
-# Data Dictionary
+# Data Dictionary — v0.4.0 Additions
 
-## visits
-| Field | Meaning |
-|---|---|
-| id | UUID visit |
-| jovis_user_id | Authenticated owner |
-| visit_date | Business visit date |
-| depot | Area / depot |
-| salesman_name | Salesman observed |
-| salesman_id | Optional salesman ID |
-| start_time | Captured when visit starts |
-| end_time | Captured when visit ends |
-| status | active / completed |
-| client_created_at | Client creation timestamp |
-| client_updated_at | Latest client edit timestamp |
+This file documents fields introduced or materially reinterpreted in v0.4.0. Existing v0.3.x fields remain unchanged unless stated.
 
-## calls
-| Field | Meaning |
-|---|---|
-| id | UUID call |
-| visit_id | Parent visit |
-| jovis_user_id | Record owner |
-| outlet_id | Optional outlet ID |
-| outlet_name | Outlet name |
-| route_status | JKS / OFF_ROUTE |
-| result | EC / NON_EC |
-| call_timestamp | First saved call-result timestamp; preserved during editing |
-| omzet | Mandatory for EC |
-| observed_reason_code | Primary actual Non-EC reason |
-| custom_real_reason | Required raw actual reason when Other is chosen |
-| contributing_factor | Optional secondary factor |
-| evidence | Factual field evidence |
-| sfa_reason_code | Reason selected in SFA/E-Work |
-| reason_match_status | MATCH / PARTIAL / MISMATCH / UNCLEAR |
-| sfa_selection_reason | Why that SFA reason was selected, if known |
-| revisit_plan | Planned follow-up |
-| can_revisit_earlier | YES / NO / UNKNOWN |
-| followup_timing_reason | Reason/signal determining follow-up timing |
-| quick_note | Optional operational note |
-| client_updated_at | Latest device-side edit time |
-| updated_at | Server-side update time |
-| last_edited_by | User performing latest server update |
+## `calls`
 
-## v0.3.7 call check-in fields
+| Field | Type | Meaning | Required |
+|---|---|---|---|
+| `call_method` | text | `VISIT` physical call or `WHATSAPP` pure remote EC | yes |
+| `route_status` | text | `JKS`, `OFF_ROUTE`, or `REMOTE`; `REMOTE` is reserved for pure WhatsApp EC | yes |
+| `result` | text | Initial physical result or pure WhatsApp EC result | yes |
+| `checkin_*` / `checkout_*` | timestamp/GPS | Physical VISIT evidence; NULL for WHATSAPP | conditional |
+
+## `call_reason_details`
+
+One row per Non-EC Call ID.
 
 | Field | Meaning |
 |---|---|
-| `outlet_id` | Kode Toko. New UI canonicalizes numeric input to `C` + digits, e.g. `C9899421`. |
-| `checkin_at` | Timestamp captured when the observer presses Check In Call and mandatory geolocation succeeds. |
-| `checkout_at` | Timestamp captured when the observer saves/finishes the call and checkout geolocation succeeds. |
-| `checkin_latitude` | Latitude at check-in. |
-| `checkin_longitude` | Longitude at check-in. |
-| `checkin_accuracy_m` | Browser-reported check-in geolocation accuracy in meters. |
-| `checkout_latitude` | Latitude at checkout. |
-| `checkout_longitude` | Longitude at checkout. |
-| `checkout_accuracy_m` | Browser-reported checkout geolocation accuracy in meters. |
-| `duration_seconds` | `checkout_at - checkin_at`, rounded to seconds and constrained to non-negative values. |
-| `call_timestamp` | Backward-compatible call timestamp. For new v0.3.7 calls it equals `checkin_at`. |
+| `recoverable_today` | YES / NO / UNKNOWN same-day order chance |
+| `preferred_recovery_channel` | WA / PHONE / REVISIT / OTHER / UNKNOWN / NONE |
+| `best_followup_time` | Human-readable best follow-up time |
+| `pic_status` | Temporary / remote-orderable / unreachable / other / unknown |
+| `pic_expected_return` | Expected PIC return |
+| `closed_status` | Open later / remote-orderable / event / all-day / permanent / unknown |
+| `closed_expected_open` | Expected opening time/date |
+| `financial_status` | Temporary / structural / unknown cash issue |
+| `cash_available_when` | Expected cash availability |
+| `partial_order_possible` | YES / NO / UNKNOWN |
+| `refusal_driver` | Stock cycle / price / product / space / low demand / other / unknown |
+| `expected_next_order` | Expected next order timing |
+| `price_issue_type` | RRP high / margin low / competitor cheaper / promo gap / other / unknown |
+| `price_detail` | Free detail on price/margin/promo |
+| `product_issue_type` | Quality / assortment / slow moving / expired risk / pack size / damaged / other / unknown |
+| `affected_products` | Product/SKU affected |
+| `external_supplier_name` | Supplier/grosir named by observer/salesman |
+| `external_supplier_driver` | Price / TOP / availability / min order / delivery / other / unknown |
+| `normal_buying_cycle` | Captured buying-cycle statement |
+| `last_order_date` | Last order date if known |
+| `last_delivery_date` | Last delivery date if known |
+| `salesman_bombing_claim` | YES / NO / UNKNOWN statement whether previous order was too large |
+| `salesman_bombing_reason` | Explanation of that statement |
+| `detail_notes` | Additional observed detail |
+| `source_version` | Capture schema version |
+
+## `call_stock_items`
+
+Multiple rows per call.
+
+| Field | Meaning |
+|---|---|
+| `product_name` | Remaining product/SKU name |
+| `stock_level` | LOT / MEDIUM / LOW / OUT / UNKNOWN |
+| `qty_note` | Indicative quantity or free description |
+| `notes` | Additional stock note |
+
+## `call_recovery_attempts`
+
+Multiple rows per original Non-EC call.
+
+| Field | Meaning |
+|---|---|
+| `attempted_at` | Recovery attempt timestamp |
+| `channel` | WA / PHONE / REVISIT / OTHER |
+| `outcome` | NO_RESPONSE / STILL_NON_EC / RECOVERED_EC |
+| `omzet` | Mandatory only for RECOVERED_EC |
+| `notes` | Recovery evidence/notes |
+
+## `call_photos`
+
+Photo metadata only; binary is in private Storage.
+
+| Field | Meaning |
+|---|---|
+| `photo_type` | STOCK / STOREFRONT / OTHER |
+| `storage_path` | Private bucket object path |
+| `caption` | Optional caption |
+| `mime_type` | Compressed image MIME |
+| `size_bytes` | Compressed object size |
+
+## `app_settings`
+
+| Key | Meaning |
+|---|---|
+| `photo_config` | max image dimension, quality, max photos/call |
+| `analysis_rules` | rule-based analysis thresholds |
+
+## Derived metrics
+
+- **Visit SC**: active, non-deleted `calls` with `call_method=VISIT`.
+- **Visit EC**: Visit SC with `result=EC`.
+- **Visit EC/SC**: Visit EC / Visit SC.
+- **Pure WA EC**: active `call_method=WHATSAPP` calls.
+- **Recovered EC**: unique original call IDs with at least one recovery attempt `RECOVERED_EC`.
+- **Bombing claim**: salesman statement only; not a validated derived bombing signal.

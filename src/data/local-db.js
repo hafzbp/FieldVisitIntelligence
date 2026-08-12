@@ -61,6 +61,21 @@ function openDB(){
       if(!db.objectStoreNames.contains('drafts')) db.createObjectStore('drafts',{keyPath:'id'});
       if(!db.objectStoreNames.contains('settings')) db.createObjectStore('settings',{keyPath:'key'});
       if(!db.objectStoreNames.contains('taxonomy')) db.createObjectStore('taxonomy',{keyPath:'reason_code'});
+      if(!db.objectStoreNames.contains('reasonDetails')) db.createObjectStore('reasonDetails',{keyPath:'call_id'});
+      if(!db.objectStoreNames.contains('stockItems')) {
+        const s=db.createObjectStore('stockItems',{keyPath:'id'});
+        s.createIndex('call_id','call_id',{unique:false});
+      }
+      if(!db.objectStoreNames.contains('recoveryAttempts')) {
+        const s=db.createObjectStore('recoveryAttempts',{keyPath:'id'});
+        s.createIndex('call_id','call_id',{unique:false});
+      }
+      if(!db.objectStoreNames.contains('photos')) {
+        const s=db.createObjectStore('photos',{keyPath:'id'});
+        s.createIndex('call_id','call_id',{unique:false});
+      }
+      if(!db.objectStoreNames.contains('photoBlobs')) db.createObjectStore('photoBlobs',{keyPath:'id'});
+      if(!db.objectStoreNames.contains('appSettings')) db.createObjectStore('appSettings',{keyPath:'setting_key'});
     };
 
     req.onsuccess = () => {
@@ -174,11 +189,16 @@ export async function setSetting(key,value){
   return put('settings',{key,value});
 }
 
-export async function cacheDataset({profiles=[],visits=[],calls=[],taxonomy=[]}){
+export async function cacheDataset({profiles=[],visits=[],calls=[],taxonomy=[],reasonDetails=[],stockItems=[],recoveryAttempts=[],photos=[],appSettings=[]}){
   await bulkPut('profiles',profiles);
   await bulkPut('visits',visits);
   await bulkPut('calls',calls);
   await bulkPut('taxonomy',taxonomy);
+  await bulkPut('reasonDetails',reasonDetails);
+  await bulkPut('stockItems',stockItems);
+  await bulkPut('recoveryAttempts',recoveryAttempts);
+  await bulkPut('photos',photos);
+  await bulkPut('appSettings',appSettings);
 }
 
 // Explicit lifecycle hook for future use/tests. Normal application code does not

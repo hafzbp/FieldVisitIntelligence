@@ -1,40 +1,42 @@
-# Deployment
+# Deployment — Field Visit Intelligence v0.4.0
 
-## Frontend
-GitHub Pages serves the repository root.
-`index.html` is the entry point.
+## Required order
 
-## Database
-Every schema change must be committed as a new timestamped file under `supabase/migrations/`.
-Do not rewrite old migrations after production data exists.
+1. Keep the current deployed v0.3.10 files available for rollback.
+2. Confirm Migration 007 succeeded:
+   `supabase/migrations/202608120007_exact_sfa_legacy_recovery_tombstone_safe.sql`.
+3. Run Migration 008:
+   `supabase/migrations/202608120008_rich_non_ec_admin_intelligence.sql`.
+4. Run verification:
+   `supabase/verification/202608120008_verify.sql`.
+5. Only after SQL verification succeeds, replace GitHub Pages repo content with v0.4.0.
+6. Wait for Pages deployment/service-worker update.
+7. Execute `docs/READY_TO_USE_CHECKLIST.md` on one JOVIS device and one Admin session.
 
-Recommended future workflow:
-1. create migration file
-2. test
-3. commit
-4. deploy migration
-5. deploy frontend
-6. run regression QA
+## Why migration first
 
-Supabase GitHub integration or Supabase CLI can automate migration deployment later.
+The v0.4.0 frontend queries new tables and the `calls.call_method` column. Deploying frontend first will generate cloud fetch/write errors.
 
-## v0.3.7 required migration
-Before field use of v0.3.7, run in Supabase SQL Editor:
+## Migration 008 data safety
 
-`supabase/migrations/202608110004_add_call_checkin_location.sql`
+Historical Visit/Call IDs are not replaced. The `call_method` column is added with DDL `NOT NULL DEFAULT 'VISIT'`; there is no row UPDATE backfill that would collide with immutable tombstones.
 
-Target result: `Success. No rows returned`.
+## Expected post-migration checks
 
-Then upload the v0.3.7 repository files to GitHub Pages. Verify the header shows `v0.3.7` before testing GPS check-in.
+Verification must confirm:
 
+- `calls.call_method` exists and has no NULL rows;
+- WhatsApp constraint exists;
+- new rich-evidence tables exist;
+- RLS is enabled;
+- private `call-evidence` bucket exists;
+- no deleted call/visit was restored;
+- legacy exact-SFA fields remain present.
 
-## v0.3.8 required migration
-Before using v0.3.8, confirm migration 004 has already been run, then run:
+## GitHub Pages
 
-`supabase/migrations/202608110005_protect_soft_delete_tombstones.sql`
+Deploy repository contents at the Pages root so `index.html` is at the public root. `sw.js` cache is versioned `fvi-v0.4.0`.
 
-Target result: `Success. No rows returned`.
+## Cache update
 
-Then upload the v0.3.8 repository files to GitHub Pages and verify the header shows `v0.3.8`.
-
-Final smoke test: Admin deletes one test Visit, then the JOVIS account/device must stop showing it after refocus/refresh without clearing browser data.
+Do not clear site data on a JOVIS device while there is a pending offline queue. First confirm sync queue is empty. Then close/reopen the site if the old service-worker UI remains visible.

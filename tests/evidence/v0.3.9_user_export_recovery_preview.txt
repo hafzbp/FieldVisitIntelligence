@@ -1,0 +1,13 @@
+Source: FVI_Consolidated_Detail_2026-08-12.xls (local analytical rehearsal only)
+Calls: 71
+Non-EC: 34
+Safe auto-recovery candidates: 23
+Legacy unresolved: 11
+Comparable recovered rows: 23
+MATCH: 18
+MISMATCH: 5
+PARTIAL: 0
+Match rate among comparable recovered rows: 78.3%
+Mismatch rate among comparable recovered rows: 21.7%
+
+This evidence is not a Supabase migration execution result.

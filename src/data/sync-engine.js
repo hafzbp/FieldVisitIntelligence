@@ -1,13 +1,21 @@
 import * as Local from './local-db.js';
 import * as Cloud from './cloud-repository.js';
+import * as Media from './media-service.js';
 import { nowISO, uid } from '../config/utils.js';
 
 let listeners=[]; let syncing=false;
 export function onSyncStatus(fn){listeners.push(fn);return()=>listeners=listeners.filter(x=>x!==fn)}
-export async function getQueue(){return (await Local.all('queue')).sort((a,b)=>String(a.created_at).localeCompare(String(b.created_at)))}
+const ENTITY_PRIORITY={visit:10,call:20,reasonDetail:30,stockItem:40,recoveryAttempt:50,photo:60};
+export async function getQueue(){
+  return (await Local.all('queue')).sort((a,b)=>{
+    const pa=ENTITY_PRIORITY[a.entity]??99,pb=ENTITY_PRIORITY[b.entity]??99;
+    if(pa!==pb)return pa-pb;
+    return String(a.created_at).localeCompare(String(b.created_at));
+  });
+}
 async function emit(){const q=await getQueue();const errors=q.filter(x=>x.status==='ERROR').length;const pending=q.filter(x=>x.status!=='ERROR').length;listeners.forEach(fn=>fn({online:navigator.onLine,pending:q.length,actionablePending:pending,errors,syncing}))}
 
-function recordKey(entity,operation,payload){return `${entity}:${operation}:${payload?.id||''}`}
+function recordKey(entity,operation,payload){return `${entity}:${operation}:${payload?.id||payload?.call_id||payload?.setting_key||''}`}
 
 export async function enqueue(entity,operation,payload){
   // Coalesce repeated UPSERTs for the same record. Field edits made before cloud sync
@@ -32,6 +40,12 @@ async function processItem(item){
   if(item.entity==='visit'&&item.operation==='UPSERT') await Cloud.upsertVisit(item.payload);
   else if(item.entity==='call'&&item.operation==='UPSERT') await Cloud.upsertCall(item.payload);
   else if(item.entity==='call'&&item.operation==='SOFT_DELETE') await Cloud.softDeleteCall(item.payload.id);
+  else if(item.entity==='reasonDetail'&&item.operation==='UPSERT') await Cloud.upsertReasonDetail(item.payload);
+  else if(item.entity==='reasonDetail'&&item.operation==='DELETE') await Cloud.deleteReasonDetail(item.payload.call_id);
+  else if(item.entity==='stockItem'&&item.operation==='UPSERT') await Cloud.upsertStockItem(item.payload);
+  else if(item.entity==='stockItem'&&item.operation==='DELETE') await Cloud.deleteStockItem(item.payload.id);
+  else if(item.entity==='recoveryAttempt'&&item.operation==='UPSERT') await Cloud.upsertRecoveryAttempt(item.payload);
+  else if(item.entity==='photo'&&item.operation==='UPLOAD') await Media.uploadStagedPhoto(item.payload);
   else throw new Error(`Unsupported sync operation: ${item.entity}/${item.operation}`);
   await Local.del('queue',item.id);
 }

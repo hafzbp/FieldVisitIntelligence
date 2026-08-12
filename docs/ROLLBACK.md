@@ -1,20 +1,22 @@
-# Rollback — v0.3.4
+# Rollback — v0.4.0
 
-## Rollback target
-v0.3.3
-
-## Database
-No Supabase schema migration is introduced by v0.3.4. Database schema remains `202608110003`, so no database rollback is required.
+**Rollback frontend target:** v0.3.10  
+**Source backup:** `rollback/v0.3.10/FieldVisitIntelligence_v0.3.10_source.zip`
 
 ## Frontend rollback
-1. Preserve/export any visible JSON backup if needed.
-2. Do **not** clear browser/site data while Sync Queue contains Pending/Error rows.
-3. Restore repository files from `rollback/v0.3.3/FieldVisitIntelligence_v0.3.3_source.zip` or revert the Git commit that deployed v0.3.4.
-4. Commit/push to `main` and wait for GitHub Pages deployment.
-5. Reload the app and verify the version badge.
 
-## Validation after rollback
-- Login Admin/JOVIS.
-- Confirm local queue remains present.
-- Confirm existing visits/calls remain visible locally/cloud according to RLS.
-- Do not assume failed queue records were acknowledged by Supabase; inspect them before clearing browser data.
+1. Confirm JOVIS sync queues are empty.
+2. Replace GitHub Pages content with the archived v0.3.10 package.
+3. Wait for Pages deployment.
+4. Close/reopen the app and verify the v0.3.10 version header.
+5. Run the v0.3.10 baseline smoke flow.
+
+## Database rollback
+
+Migration 008 is additive. A frontend rollback to v0.3.10 does **not** require dropping the new v0.4.0 tables or `call_method` column. Keeping additive schema objects avoids destructive rollback risk and preserves any v0.4.0 evidence already collected.
+
+Do not delete v0.4.0 rich-evidence rows merely to roll back the frontend.
+
+## If Migration 008 fails
+
+The migration is transactional. Do not deploy frontend v0.4.0. Capture the full SQL error and fix forward with a new migration rather than weakening tombstone/RLS protections.

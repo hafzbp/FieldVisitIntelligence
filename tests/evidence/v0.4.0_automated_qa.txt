@@ -1,0 +1,93 @@
+=== JS syntax ===
+PASS | JS syntax all modules
+
+=== v0.4.0 static/unit ===
+PASS | version.json 0.4.0
+FAIL | schema 008
+PASS | app version 0.4.0
+PASS | DB name preserved
+PASS | DB version upgraded
+PASS | service worker version
+FAIL | no service role key
+PASS | exact SFA: Pemilik tidak ada ditempat
+PASS | exact SFA: Nanti ditelpon saja
+PASS | exact SFA: Barang masih ada
+PASS | exact SFA: Toko tidak ada uang
+PASS | exact SFA: Toko Tutup
+PASS | exact SFA: Ambil dari supplier lain
+PASS | exact SFA: Lainnya
+PASS | 7 exact SFA code entries
+PASS | observed taxonomy separate
+PASS | method primary VISIT
+PASS | method secondary WA
+PASS | WA confirmation
+PASS | WA route REMOTE
+PASS | WA forces EC
+PASS | WA no GPS
+PASS | Visit GPS required
+PASS | GPS checkout required
+PASS | Kode toko C canonical
+PASS | rich recoverability required
+PASS | PIC conditional required
+PASS | closed conditional required
+PASS | financial conditional required
+PASS | BMA bombing claim required
+PASS | BMA stock item required
+PASS | photo capture
+PASS | photo compression hard cap
+PASS | recovery event form
+PASS | original nonEC preserved
+PASS | recovery channels
+PASS | recovery omzet validation
+PASS | admin has no visit nav
+PASS | admin 5 nav items
+PASS | admin explicit no Visit
+PASS | detail header filters
+PASS | clickable coordinates
+PASS | admin join visit map
+PASS | map sequence
+PASS | Leaflet included
+PASS | admin questions Q1-Q5
+PASS | BMA claim caveat
+PASS | Visit EC/SC separated
+PASS | WA EC separated
+PASS | Recovered EC separate
+PASS | IndexedDB store reasonDetails
+PASS | IndexedDB store stockItems
+PASS | IndexedDB store recoveryAttempts
+PASS | IndexedDB store photos
+PASS | IndexedDB store photoBlobs
+PASS | IndexedDB store appSettings
+PASS | queue dependency priority
+PASS | pending child refresh protected
+PASS | migration call_method default DDL
+PASS | migration no tombstone-unsafe call backfill
+PASS | migration WA constraint
+PASS | migration creates call_reason_details
+PASS | migration creates call_stock_items
+PASS | migration creates call_recovery_attempts
+PASS | migration creates call_photos
+PASS | migration creates app_settings
+PASS | private storage bucket | bucket configured
+PASS | storage private flag
+PASS | storage size <= 1MB
+PASS | child integrity trigger
+PASS | child deleted parent protection
+PASS | RLS enabled
+PASS | export sheet 11_REASON_DETAIL
+PASS | export sheet 12_STOCK_CHECK
+PASS | export sheet 13_RECOVERY_ATTEMPTS
+PASS | export sheet 14_PHOTO_EVIDENCE
+PASS | export Visit vs WA summary
+PASS | export recovery preserved
+
+TOTAL=78 PASS=76 FAIL=2
+
+=== v0.4.0 domain executable ===
+PASS | v0.4.0 domain executable assertions: 17
+
+=== v0.4.0 export integration ===
+PASS | v0.4.0 export integration assertions: 13
+
+=== retained v0.3.9 reason-engine regression ===
+PASS - exact SFA + legacy recovery logic retained in v0.3.10

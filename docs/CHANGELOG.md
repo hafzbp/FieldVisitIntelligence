@@ -1,5 +1,82 @@
 # Changelog
 
+## [0.4.0] - 2026-08-12
+
+### Added
+- Primary VISIT vs secondary pure BY WA call method.
+- Reason-specific rich Non-EC evidence for PIC, closed store, BMA, financial, refusal, external supplier, price, product, other and unclear cases.
+- BMA stock/SKU rows and salesman oversized-order claim capture.
+- Post-visit recovery attempts without overwriting original Non-EC.
+- Private compressed photo evidence.
+- Admin Summary, row-level Detail, Join Visit Map, Q1–Q5 rule-based Analysis and Settings-only administration.
+- Export sheets `11_REASON_DETAIL`, `12_STOCK_CHECK`, `13_RECOVERY_ATTEMPTS`, `14_PHOTO_EVIDENCE`.
+
+### Changed
+- Physical Visit EC/SC now explicitly excludes pure WhatsApp EC.
+- IndexedDB schema upgraded to v2 while retaining database name `fvi_v030`.
+- Sync queue processes parent entities before child evidence and protects pending child state during inbound refresh.
+
+### Security
+- Added RLS for rich-evidence tables.
+- Added private `call-evidence` Storage bucket and signed Admin viewing.
+- Retained immutable tombstone protections.
+
+### QA
+- 123 automated/static/executable checks PASS, 0 FAIL.
+- Target Supabase migration/authenticated workflow, real GPS/camera, photo upload, and full browser E2E remain BLOCKED until deployed smoke testing.
+
+### Migration
+- Requires `202608120008_rich_non_ec_admin_intelligence.sql` after successful Migration 007.
+
+## [0.3.10] - 2026-08-12
+
+### Fixed
+- Replaced the failed active Migration 006 path with standalone/idempotent Migration 007.
+- Legacy exact-SFA backfill now skips soft-deleted Calls and Calls under soft-deleted Visits.
+- Runtime SFA provenance normalization returns deleted rows unchanged.
+
+### Preserved
+- v0.3.8 tombstone and Call-parent integrity guards remain enabled.
+- v0.3.9 exact seven E-Work/SFA options and conservative recovery rules are unchanged.
+- Existing Call/Visit IDs, GPS, timestamps, omzet, evidence and legacy SFA values remain intact.
+
+### Added
+- Read-only post-migration verification SQL.
+- Failed Migration 006 archived under `docs/failed_migrations/` for audit traceability.
+- v0.3.9 rollback source package.
+
+### Database
+- Active schema migration: `202608120007_exact_sfa_legacy_recovery_tombstone_safe.sql`.
+- Schema version is now `202608120007`.
+
+### QA
+- Regression/static/unit suites and synthetic export integration executed for v0.3.10.
+- Real Supabase execution remains BLOCKED until run in the production project.
+
+## [0.3.9] - 2026-08-12
+
+### Fixed
+- Replaced interpreted SFA reason choices with the exact seven options available in E-Work/SFA.
+- Reason accuracy no longer trusts the pre-v0.3.9 shared-taxonomy match flag.
+
+### Added
+- `sfa_reason_exact_code`, `sfa_capture_type`, and `sfa_recovery_status`.
+- Conservative legacy auto-recovery for Stock, Financial/Cash, and Store Closed.
+- Admin `SFA Legacy Recovery` queue for ambiguous historical calls.
+- SFA data-quality coverage metrics.
+- `NON_CAUSAL`, `TAXONOMY_GAP`, and `UNRESOLVED` derived analysis states.
+- `10_SFA_RECOVERY` export sheet.
+
+### Database
+- Added migration `202608120006_exact_sfa_legacy_recovery.sql`.
+- Schema version is now `202608120006`.
+- Existing IDs and raw legacy SFA values are preserved.
+
+### QA
+- 121 automated assertions PASS / 0 FAIL across retained regression and v0.3.9 suites.
+- Synthetic detailed-export XML parse PASS.
+- Real Supabase/mobile smoke tests remain BLOCKED until deployment.
+
 ## [0.3.7] - 2026-08-11
 
 ### Added

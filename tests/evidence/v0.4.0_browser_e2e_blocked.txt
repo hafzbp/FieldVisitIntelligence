@@ -1,0 +1,15 @@
+Field Visit Intelligence v0.4.0
+Browser E2E attempt: BLOCKED
+Date: 2026-08-12
+
+Environment:
+- Playwright Python package available
+- Chromium executable: /usr/bin/chromium
+- Local static server: http://127.0.0.1:8765
+
+Attempt result:
+Page.goto failed with:
+  net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:8765/
+
+Interpretation:
+The execution environment's browser policy blocked localhost navigation. This test was not executed and is not counted as PASS. Static HTTP serving itself was independently verified with curl (HTTP 200 for index.html and src/ui/app.js).

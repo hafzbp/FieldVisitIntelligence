@@ -1,28 +1,34 @@
-# Security
+# Security — v0.4.0
 
-## Public frontend values
-Allowed in GitHub:
-- Supabase Project URL
-- Supabase Publishable Key
+## Authentication and authorization
 
-Not allowed in GitHub/frontend:
-- Supabase Secret key
-- legacy service_role key
-- database password
-- user password
+Supabase Auth remains mandatory. New v0.4.0 tables use RLS:
 
-## RLS
-RLS is enabled on application tables.
-JOVIS row access is constrained by authenticated user ownership.
-Admin access is enforced server-side using an admin profile check.
+- JOVIS can select/write child records owned by their own Call.
+- Admin can read/write across JOVIS records according to `public.is_admin()`.
+- A database integrity trigger verifies child owner equals the parent Call owner and blocks writes below a deleted parent Call.
 
-## First Admin bootstrap
-The first Admin role is promoted through the Supabase Dashboard after the migration creates the profile.
-Normal users cannot promote themselves through the app.
+## Supabase keys
 
-## Audit
-Call updates write old/new JSON into `call_edit_history` with changer identity and timestamp.
+Only the Supabase publishable key is present in browser source. Secret/service-role/database credentials must never be embedded in GitHub Pages.
 
-## Validation
-Free text is escaped before UI rendering.
-Database CHECK constraints validate result/reason/omzet requirements.
+## Photo evidence
+
+- Storage bucket: `call-evidence`.
+- Bucket is private.
+- Object path starts with authenticated user ID.
+- JOVIS can upload/select/delete objects in their own folder under policy; Admin can read/delete evidence according to policy.
+- Admin photo viewing uses short-lived signed URLs.
+- Client compression targets <950 KB to remain below the 1 MB bucket limit.
+
+## Sensitive data
+
+Photo evidence may contain store information. Capture only business-relevant evidence. Do not use photo evidence to collect unnecessary personal information. Exports contain private Storage paths but not public URLs.
+
+## Input handling
+
+UI output uses HTML escaping for user-entered text. Supabase table access uses structured client operations rather than string-built SQL. Kode Toko is normalized to `C` plus digits.
+
+## Tombstones
+
+Soft-deleted Visit/Call records are not restored by v0.4.0 sync. Rich child queues linked to tombstoned Calls are removed from local queue reconciliation and database child writes are blocked.

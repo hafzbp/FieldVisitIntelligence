@@ -1,0 +1,143 @@
+Field Visit Intelligence v0.3.9 QA evidence
+Generated 2026-08-12
+
+
+QA SUMMARY
+PASS - Current package version 0.3.9 
+PASS - Visit payload uses sanitizer 
+PASS - Call payload uses sanitizer 
+PASS - Legacy deleted status repaired before cloud upsert 
+PASS - Admin soft delete does not assign invalid deleted status 
+PASS - Visit whitelist excludes created_at 
+PASS - Call whitelist excludes created_at 
+PASS - Visit whitelist excludes updated_at 
+PASS - Call whitelist excludes updated_at 
+PASS - Visit whitelist excludes last_edited_by 
+PASS - Call whitelist excludes last_edited_by 
+PASS - Queue coalesces duplicate record 
+PASS - Queue exposes retry item 
+PASS - Queue exposes retry all errors 
+PASS - Sync error detail UI exists 
+PASS - Diagnostic panel exists 
+PASS - Sync badge is clickable 
+PASS - Service worker network-first 
+PASS - Service worker cache v0.3.9 
+PASS - No Supabase secret key value in repo 
+PASS - JavaScript syntax 
+
+21 PASS / 0 FAIL
+
+
+QA SUMMARY
+PASS - Current package version 0.3.9 
+PASS - Service worker cache v0.3.9 
+PASS - Kode Toko Indonesian label 
+PASS - Store Code English label 
+PASS - Store code canonical C prefix 
+PASS - Store code numeric-only UI 
+PASS - Mandatory check-in gate exists 
+PASS - Browser geolocation required 
+PASS - Denied location blocks call 
+PASS - Check-in timestamp captured 
+PASS - Checkout timestamp captured 
+PASS - Duration calculated 
+PASS - Save performs checkout location 
+PASS - End visit blocked during checked-in call 
+PASS - Cloud payload includes checkin_at 
+PASS - Migration adds checkin_at 
+PASS - Cloud payload includes checkout_at 
+PASS - Migration adds checkout_at 
+PASS - Cloud payload includes checkin_latitude 
+PASS - Migration adds checkin_latitude 
+PASS - Cloud payload includes checkin_longitude 
+PASS - Migration adds checkin_longitude 
+PASS - Cloud payload includes checkin_accuracy_m 
+PASS - Migration adds checkin_accuracy_m 
+PASS - Cloud payload includes checkout_latitude 
+PASS - Migration adds checkout_latitude 
+PASS - Cloud payload includes checkout_longitude 
+PASS - Migration adds checkout_longitude 
+PASS - Cloud payload includes checkout_accuracy_m 
+PASS - Migration adds checkout_accuracy_m 
+PASS - Cloud payload includes duration_seconds 
+PASS - Migration adds duration_seconds 
+PASS - Migration schema file present 
+PASS - Export includes check-in / checkout / duration 
+PASS - Export includes GPS sheet 
+PASS - Export uses Kode Toko 
+PASS - Check-in UI styles exist 
+PASS - Legacy deleted status repaired before cloud upsert 
+PASS - Queue coalesces duplicate record 
+PASS - No Supabase secret key value in repo 
+PASS - JavaScript syntax 
+
+41 PASS / 0 FAIL
+
+
+QA SUMMARY
+PASS - Current package version 0.3.9 
+PASS - Service worker cache v0.3.9 
+PASS - Background pull configured 
+PASS - Cloud fetch includes visit tombstones 
+PASS - Cloud fetch includes call tombstones 
+PASS - Queue reconciles remote tombstones 
+PASS - Remote tombstone wins pending visit 
+PASS - Remote tombstone wins pending call 
+PASS - Deleted visit drafts cleaned 
+PASS - Deleted selected visit cleared 
+PASS - Field cannot render tombstoned visit 
+PASS - Analysis cannot render tombstoned visit 
+PASS - Focus pull implemented 
+PASS - Visibility pull implemented 
+PASS - Background pull avoids active field capture 
+PASS - Deleted visits excluded from admin depot list 
+PASS - Migration guards soft-delete tombstones 
+PASS - Migration makes deleted rows immutable to JOVIS 
+PASS - Migration protects call/visit ownership integrity 
+PASS - Migration blocks active calls under deleted visit 
+PASS - Migration is additive and transactional 
+PASS - Simulation: tombstone survives pending filter 
+PASS - GPS check-in gate retained 
+PASS - Kode Toko C-prefix retained 
+PASS - Dwell time retained 
+PASS - Sync diagnostic retained 
+PASS - No Supabase secret key value in repo 
+PASS - JavaScript syntax 
+
+28 PASS / 0 FAIL
+
+
+QA SUMMARY
+PASS - Version 0.3.9 
+PASS - Service worker cache v0.3.9 
+PASS - Exact SFA option: Pemilik tidak ada ditempat 
+PASS - Exact SFA option: Nanti ditelpon saja 
+PASS - Exact SFA option: Barang masih ada 
+PASS - Exact SFA option: Toko tidak ada uang 
+PASS - Exact SFA option: Toko Tutup 
+PASS - Exact SFA option: Ambil dari supplier lain 
+PASS - Exact SFA option: Lainnya 
+PASS - Observed and SFA taxonomy separated 
+PASS - Safe legacy mapping is conservative 
+PASS - Cloud payload includes sfa_reason_exact_code 
+PASS - Migration adds sfa_reason_exact_code 
+PASS - Cloud payload includes sfa_capture_type 
+PASS - Migration adds sfa_capture_type 
+PASS - Cloud payload includes sfa_recovery_status 
+PASS - Migration adds sfa_recovery_status 
+PASS - Migration preserves legacy reason field 
+PASS - Migration auto-recovers only stock financial closed 
+PASS - Migration cutover trigger exists 
+PASS - Admin legacy recovery UI exists 
+PASS - New call uses exact SFA wording 
+PASS - Analysis excludes unresolved from forced mismatch 
+PASS - Nanti ditelpon treated non-causal 
+PASS - Lainnya treated taxonomy gap 
+PASS - Export preserves exact + legacy provenance 
+PASS - Export includes recovery sheet 
+PASS - Rollback v0.3.8 included 
+PASS - Reason-engine executable unit test (PASS - v0.3.9 reason engine exact SFA + legacy recovery logic)
+PASS - JavaScript syntax 
+PASS - No Supabase secret key value in repo 
+
+31 PASS / 0 FAIL
