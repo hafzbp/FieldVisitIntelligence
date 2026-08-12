@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.1] - 2026-08-12
+
+### Fixed
+- Fixed a fatal missing closing parenthesis in the `visitCalls` sorter in `src/ui/app.js` that prevented the ES module from parsing and left GitHub Pages as a blank white screen.
+- Added explicit asset cache-busting (`?v=0.4.1`) for the main CSS and application entry module.
+
+### QA Guard
+- Added a true ES-module load smoke test because the prior Node `--check` step did not detect this specific ES-module parse failure.
+- Existing v0.4.0 business/domain/export tests were rerun after the hotfix.
+
+### Database
+- No migration. Schema remains `202608120008`.
+
 ## [0.4.0] - 2026-08-12
 
 ### Added

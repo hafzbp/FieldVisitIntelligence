@@ -1,4 +1,4 @@
-export const APP_VERSION = '0.4.0';
+export const APP_VERSION = '0.4.1';
 export const APP_NAME = 'Field Visit Intelligence';
 export const DB_NAME = 'fvi_v030';
 export const DB_VERSION = 2;

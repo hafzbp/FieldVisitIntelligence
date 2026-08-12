@@ -1,0 +1,1 @@
+PASS - exact SFA + legacy recovery logic retained in v0.3.10

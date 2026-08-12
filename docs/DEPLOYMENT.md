@@ -1,4 +1,4 @@
-# Deployment — Field Visit Intelligence v0.4.0
+# Deployment — Field Visit Intelligence v0.4.1
 
 ## Required order
 
@@ -9,13 +9,13 @@
    `supabase/migrations/202608120008_rich_non_ec_admin_intelligence.sql`.
 4. Run verification:
    `supabase/verification/202608120008_verify.sql`.
-5. Only after SQL verification succeeds, replace GitHub Pages repo content with v0.4.0.
+5. Only after SQL verification succeeds, replace GitHub Pages repo content with v0.4.1.
 6. Wait for Pages deployment/service-worker update.
 7. Execute `docs/READY_TO_USE_CHECKLIST.md` on one JOVIS device and one Admin session.
 
 ## Why migration first
 
-The v0.4.0 frontend queries new tables and the `calls.call_method` column. Deploying frontend first will generate cloud fetch/write errors.
+The v0.4.1 frontend queries new tables and the `calls.call_method` column. Deploying frontend first will generate cloud fetch/write errors.
 
 ## Migration 008 data safety
 
@@ -35,7 +35,7 @@ Verification must confirm:
 
 ## GitHub Pages
 
-Deploy repository contents at the Pages root so `index.html` is at the public root. `sw.js` cache is versioned `fvi-v0.4.0`.
+Deploy repository contents at the Pages root so `index.html` is at the public root. `sw.js` cache is versioned `fvi-v0.4.1`.
 
 ## Cache update
 

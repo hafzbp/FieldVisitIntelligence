@@ -1,0 +1,1 @@
+PASS QA-041-HTTP: index.html and versioned app.js served HTTP 200

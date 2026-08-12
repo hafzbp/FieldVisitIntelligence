@@ -1,6 +1,6 @@
 # Field Visit Intelligence
 
-**Version:** 0.4.0  
+**Version:** 0.4.1  
 **Schema:** 202608120008  
 **Frontend:** GitHub Pages  
 **Backend:** Supabase Auth + Postgres + Storage  
@@ -9,6 +9,12 @@
 ## Purpose
 
 Field Visit Intelligence captures physical field-call evidence for EC/SC research while preserving a separate channel for pure WhatsApp EC. The application is designed to answer operational questions around Non-EC root causes, same-day recoverability, PIC/store availability, recovery channel effectiveness, and Barang Masih Ada (BMA) patterns.
+
+## v0.4.1 hotfix
+
+- Fixed fatal JavaScript parse error in `src/ui/app.js` that caused a blank white page before the app could boot.
+- Added cache-busting query strings for the primary CSS and module entrypoint.
+- No database/schema change from v0.4.0; Migration 008 remains the current schema.
 
 ## v0.4.0 highlights
 
@@ -46,10 +52,10 @@ For an existing production database upgraded from v0.3.8/v0.3.10:
 1. Confirm Migration `202608120007_exact_sfa_legacy_recovery_tombstone_safe.sql` has succeeded. If it has not, run it first.
 2. Run `supabase/migrations/202608120008_rich_non_ec_admin_intelligence.sql`.
 3. Run `supabase/verification/202608120008_verify.sql`.
-4. Deploy the v0.4.0 frontend files.
+4. Deploy the v0.4.1 frontend files.
 5. Perform the production smoke tests documented in `docs/READY_TO_USE_CHECKLIST.md`.
 
-**Do not deploy v0.4.0 frontend before Migration 008.** The frontend reads tables/columns introduced by that migration.
+**Do not deploy v0.4.1 frontend before Migration 008.** The frontend reads tables/columns introduced by that migration.
 
 ## Local/offline state
 

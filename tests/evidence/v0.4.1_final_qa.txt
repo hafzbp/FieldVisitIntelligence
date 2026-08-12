@@ -1,0 +1,9 @@
+Field Visit Intelligence v0.4.1 final targeted QA
+TOTAL=89 PASS=89 FAIL=0
+PASS | v0.4.0 domain executable assertions: 17
+PASS | v0.4.0 export integration assertions: 13
+PASS - exact SFA + legacy recovery logic retained in v0.3.10
+PASS QA-041-MODULE-LOAD: app.js parses, links local imports, and executes top-level initialization with browser stubs.
+PASS | sw.js syntax
+PASS | static HTTP index.html
+PASS | static HTTP versioned app.js

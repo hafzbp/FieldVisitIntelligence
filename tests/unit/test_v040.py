@@ -12,12 +12,12 @@ local=text('src/data/local-db.js'); sync=text('src/data/sync-engine.js'); cloud=
 exp=text('src/export/exporter.js'); admin=text('src/domain/admin-intelligence.js'); detail=text('src/domain/reason-detail-config.js'); media=text('src/data/media-service.js')
 idx=text('index.html'); css=text('assets/styles.css'); sw=text('sw.js'); ver=json.loads(text('version.json'))
 
-check('version.json 0.4.0',ver.get('version')=='0.4.0')
+check('version.json 0.4.1',ver.get('version')=='0.4.1')
 check('schema 008',str(ver.get('schema_version','')).endswith('008'))
-check('app version 0.4.0',"APP_VERSION = '0.4.0'" in cfg)
+check('app version 0.4.1',"APP_VERSION = '0.4.1'" in cfg)
 check('DB name preserved','fvi_v030' in cfg)
 check('DB version upgraded','DB_VERSION = 2' in cfg)
-check('service worker version','fvi-v0.4.0' in sw)
+check('service worker version','fvi-v0.4.1' in sw)
 check('no secret key assigned',not re.search(r"(?:secretKey|serviceRoleKey|service_role\s*:)\s*['\"]", text('src/config/supabase-config.js'), re.I) and 'sb_secret_' not in text('src/config/supabase-config.js'))
 
 exact=['Pemilik tidak ada ditempat','Nanti ditelpon saja','Barang masih ada','Toko tidak ada uang','Toko Tutup','Ambil dari supplier lain','Lainnya']

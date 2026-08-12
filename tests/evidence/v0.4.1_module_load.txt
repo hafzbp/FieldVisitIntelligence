@@ -1,0 +1,1 @@
+PASS QA-041-MODULE-LOAD: app.js parses, links local imports, and executes top-level initialization with browser stubs.
