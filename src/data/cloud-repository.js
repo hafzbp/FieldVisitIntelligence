@@ -34,7 +34,7 @@ export function sanitizeVisitPayload(row){
 }
 export function sanitizeCallPayload(row){return pickDefined(row,CALL_FIELDS)}
 export function sanitizeReasonDetailPayload(row){return pickDefined(row,REASON_DETAIL_FIELDS)}
-export function sanitizeStockItemPayload(row){return pickDefined(row,STOCK_ITEM_FIELDS)}
+export function sanitizeStockItemPayload(row){const payload=pickDefined(row,STOCK_ITEM_FIELDS);const allowed=new Set(['LOT','MEDIUM','LOW','OUT','UNKNOWN']);payload.stock_level=allowed.has(payload.stock_level)?payload.stock_level:null;return payload}
 export function sanitizeRecoveryPayload(row){return pickDefined(row,RECOVERY_FIELDS)}
 export function sanitizePhotoPayload(row){return pickDefined(row,PHOTO_FIELDS)}
 
